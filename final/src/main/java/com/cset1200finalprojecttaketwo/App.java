@@ -3,23 +3,48 @@ package com.cset1200finalprojecttaketwo;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 
-/**
- * Hello world!
- *
- */
+
+import org.apache.commons.lang3.StringUtils;
+
+
 public class App 
 {
     public static void main( String[] args )
     {
-        
+        boolean status = true;
         Inventory inv = new Inventory();
-        inv.viewInventory();
-        inv.removeInventory(3);
-        inv.viewInventory();
-        inv.addInventory(12, null, null, null, 0, 0, 0);
-        inv.viewInventory();
+        Scanner scanner = new Scanner(System.in);
+        do {
+            System.out.println("Choose from the following menu:\n1 - View Inventory\n2 - Purchase Inventory\n3 - Add Inventory\n4 - View Logs\n5 - Exit\n");
+            int input = scanner.nextInt();
 
+            if(input == 1){
+                inv.viewInventory();
+            }
+
+            else if(input == 2){
+                System.out.println("What is the id of the item you would like to purchase? (to go back, type '418')\n");
+                int purchaseId = scanner.nextInt();
+                if (input != 418 && inv.getAllItemIds().contains(purchaseId)) {
+                    System.out.println(String.format("\n%s has been purchased\n", inv.getItem(purchaseId).getItemName()));
+                    inv.removeInventory(purchaseId);
+                }
+            }
+
+            else if(input == 3){
+                System.out.println("Enter an item ID for this new listing. (to go back, type '418')\n");
+                
+            }
+
+
+            else if(input == 5) {
+                System.exit(1);
+            }
+        } 
+        while (status);
+        scanner.close();
     }
 }
 
@@ -94,10 +119,23 @@ class Inventory {
             Listing thisListing = new Listing(i, ("Listing" + i), ("This is the description for listing" + i), "urmum", 5, 4, (300000 * i));
             listings.add(thisListing);
         }
+        Listing testListing = new Listing(555, "The Bruh Button 5000,00000,0000", "This magnificnet button lorem ipsum blah blah blah blah blah, ya know?", "urmum products", 4, 3, 1010010);
+        listings.add(testListing);
     }
-    void viewInventory(){
+    void viewInventory() {
+        // Print table header
+        System.out.println(StringUtils.rightPad("id", 8) + StringUtils.rightPad("Item", 34) + StringUtils.rightPad("Description", 82) + StringUtils.rightPad("Price", 12) + StringUtils.rightPad("Rating", 12) + StringUtils.rightPad("Seller", 22) + "Seller Rating");
+        // Print each listing
         for (Listing listing : listings) {
-            System.out.println("id: " + listing.getItemId() + "\n" + "Item: " + listing.getItemName() + "\n" + "Description: " + listing.getItemDescription() + "\n" + "Price: " + listing.getItemPrice() + "\n" + "Item Rating: " + listing.getItemRating() + "\n" + "Item Seller: " + listing.getItemSeller() + "\n" + "Seller Rating: " + listing.getSellerRating() + "\n\n");
+            String id = StringUtils.rightPad(String.valueOf(listing.getItemId()), 6);
+            String itemName = StringUtils.rightPad(listing.getItemName(), 32);
+            String itemDescription = StringUtils.rightPad(listing.getItemDescription(), 80);
+            String price = StringUtils.rightPad("$" + String.valueOf(listing.getItemPrice()), 10);
+            String itemRating = StringUtils.rightPad(String.valueOf(listing.getItemRating()), 10);
+            String itemSeller = StringUtils.rightPad(listing.getItemSeller(), 20);
+            String sellerRating = String.valueOf(listing.getSellerRating());
+            
+            System.out.printf("%s  %s  %s  %s  %s  %s  %s%n\n", id, itemName, itemDescription, price, itemRating, itemSeller, sellerRating);
         }
     }
     void addInventory(int idd, String name, String description, String seller, int rating, int sellerrating, int price){
@@ -112,5 +150,23 @@ class Inventory {
                 iterator.remove();
             }
         }
+    }
+    ArrayList<Integer> getAllItemIds() {
+        ArrayList<Integer> ids = new ArrayList<>();
+        for(Listing listing:listings) {
+            ids.add(listing.getItemId());
+        }
+        return ids;
+    }
+    ArrayList<Listing> getInventory() {
+        return listings;
+    }
+    Listing getItem(Integer id) {
+        for(Listing listing:listings){
+            if(listing.getItemId() == id){
+                return listing;
+            }
+        }
+        return null;
     }
 }
