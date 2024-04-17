@@ -13,15 +13,14 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 
 class Listing {
-    private int id = 0;
+    int id = 0; // all of the attributes of a listing: id, name, description...
     String itemName;
     String itemDescription;
     String itemSeller;
     Double itemRating;
     Double sellerRating;
     int itemPrice;
-    java.time.LocalDateTime dateCreated = LocalDateTime.now();
-    public Listing (int idd, String name, String description, String seller, Double rating, Double sellerrating, int price) {
+    public Listing (int idd, String name, String description, String seller, Double rating, Double sellerrating, int price) { //initialization method
         id = idd;
         itemName = name;
         itemDescription = description;
@@ -31,7 +30,7 @@ class Listing {
         itemPrice = price;
     }
 
-    public int getItemId() {
+    public int getItemId() { // getter methods, useful for printing out the attributes when viewing inventory
         return id;
     }
     public String getItemName() {
@@ -52,10 +51,10 @@ class Listing {
     public int getItemPrice() {
         return itemPrice;
     }
-    public java.time.LocalDateTime getDateCreated() {
-        return dateCreated;
+    public void setItemId(Integer newId){
+        id = newId;
     }
-    public void setItemName(String name) {
+    public void setItemName(String name) { //setter methods, useful for updating listings
         itemName = name;
     }
     public void setItemDescription(String desc) {
@@ -82,15 +81,13 @@ class Inventory {
 
     public Inventory() {
         for (int i=0; i < 10; i++) {
-            Listing thisListing = new Listing(i, ("Listing" + i), ("This is the description for listing" + i), "urmum", 5.0, 4.0, (300000 * i));
+            Listing thisListing = new Listing(i, ("Listing" + i), ("This is the description for listing" + i), ("seller" + i), 5.0, 4.0, (300000 * i));
             listings.add(thisListing);
         }
-        Listing testListing = new Listing(555, "The Bruh Button 5000,00000,0000", "This magnificnet button lorem ipsum blah blah blah blah blah, ya know?", "urmum products", 4.0, 3.0, 1010010);
-        listings.add(testListing);
     }
     Integer promptForMenu(){
         while(true){
-            System.out.println("Choose from the following menu:\n1 - View Inventory\n2 - Purchase Inventory\n3 - Add Inventory\n4 - View Logs\n5 - Exit\n");
+            System.out.println("Choose from the following menu:\n1 - View Inventory\n2 - Purchase Inventory\n3 - Add Inventory\n4 - Update Listing\n5 - View Logs\n6 - Exit");
             try{
                 String inputAsString = scanner.nextLine();
                 Integer inputAsInteger = Integer.parseInt(inputAsString);
@@ -312,5 +309,86 @@ class Inventory {
                 System.out.println("This rating is invalid. Enter a seller rating for the new item (ex. 4.3, 5.0, etc.)(type 418 to go back)");
             }
         }while(true);
+    }
+    void updateListing(){
+        System.out.println("What is the id of the listing you would like to update? (type 418 to go back)");
+        do {
+            String idAsString = scanner.nextLine();
+            if(idAsString == ""){
+                idAsString = scanner.nextLine();
+            }
+            try {
+                Integer idAsInteger = Integer.parseInt(idAsString);
+                if(idAsInteger == 418) {
+                    return;
+                }
+                if(!getAllItemIds().contains(idAsInteger)){
+                    throw new Exception();
+                }
+            while (true){ //working on looping if bad field
+            String field = scanner.nextLine().toLowerCase();
+            if (field == "id"){
+                Integer newId = getdNewItemId();
+                getItem(idAsInteger).setItemId(newId);
+                System.out.println("Listing updated.\n");
+                return;
+            }
+            else if (field == "item"){
+                String newItemName = getNewItemName();
+                getItem(idAsInteger).setItemName(newItemName);
+                System.out.println("Listing updated.\n");
+                return;
+            }
+            else if (field == "description"){
+                String newItemDescription = getNewItemDesc();
+                getItem(idAsInteger).setItemDescription(newItemDescription);
+                System.out.println("Listing updated.\n");
+                return;
+            }
+            else if (field == "price"){
+                Integer newItemPrice = getNewItemPrice();
+                getItem(idAsInteger).setItemPrice(newItemPrice);
+                System.out.println("Listing updated.\n");
+                return;
+            }
+            else if (field == "rating"){
+                Double newItemRating = getNewItemRating();
+                getItem(idAsInteger).setItemRating(newItemRating);
+                System.out.println("Listing updated.\n");
+                return;
+            }
+            else if (field == "seller"){
+                String newItemSeller = getNewItemSeller();
+                getItem(idAsInteger).setItemSeller(newItemSeller);
+                System.out.println("Listing updated.\n");
+                return;
+            }
+            else if (field == "seller rating"){
+                Double newSellerRating = getNewSellerRating();
+                getItem(idAsInteger).setSellerRating(newSellerRating);
+                System.out.println("Listing updated.\n");
+                return;
+            }
+            else {
+                System.out.println("This entry is invalid. Please enter the name of the listing attribute you want to change");
+            }
+            } catch (Exception e) {
+                System.out.println("This id is invalid. Enter an id associated with a listing (type 418 to go back)");
+            }
+        }while(true);
+
+    }
+}
+
+class asciiArt{
+    asciiArt(){
+        String ascii0 = "--------------------------------------------------------------------------------------------------------------------------------------------------------------------\n";
+        String ascii1 = "██     ██ ███████ ██       ██████  ██████  ███    ███ ███████     ████████  ██████      ███████ ██   ██  ██████  ██████  ███████ ███    ███  █████  ██████  ████████\n";
+        String ascii2 = "██     ██ ██      ██      ██      ██    ██ ████  ████ ██             ██    ██    ██     ██      ██   ██ ██    ██ ██   ██ ██      ████  ████ ██   ██ ██   ██    ██   \n";
+        String ascii3 = "██  █  ██ █████   ██      ██      ██    ██ ██ ████ ██ █████          ██    ██    ██     ███████ ███████ ██    ██ ██████  ███████ ██ ████ ██ ███████ ██████     ██   \n";
+        String ascii4 = "██ ███ ██ ██      ██      ██      ██    ██ ██  ██  ██ ██             ██    ██    ██          ██ ██   ██ ██    ██ ██           ██ ██  ██  ██ ██   ██ ██   ██    ██   \n";
+        String ascii5 = " ███ ███  ███████ ███████  ██████  ██████  ██      ██ ███████        ██     ██████      ███████ ██   ██  ██████  ██      ███████ ██      ██ ██   ██ ██   ██    ██   \n";
+        String ascii6 = "--------------------------------------------------------------------------------------------------------------------------------------------------------------------\n";
+        System.out.println(ascii0 + ascii1 + ascii2 + ascii3 + ascii4 + ascii5 + ascii6);
     }
 }

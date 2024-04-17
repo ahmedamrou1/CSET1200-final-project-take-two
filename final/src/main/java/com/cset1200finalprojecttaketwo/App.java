@@ -6,6 +6,10 @@ public class App
 {
     public static void main( String[] args )
     {
+        for(int i = 0; i < 10; i++){
+            System.out.println("\n");
+        }
+        new asciiArt();
         Inventory inv = new Inventory();
         Scanner scanner = new Scanner(System.in);
         do {
@@ -13,7 +17,6 @@ public class App
             if(input == 1){
                 inv.viewInventory();
             }
-
             else if(input == 2){
                 Boolean validId = inv.purchaseItem();
                 if(validId == null) continue;
@@ -37,11 +40,14 @@ public class App
                 inv.addInventory(newId, newName, newDesc, newItemSeller, newRating, newSellerRating, newPrice);
                 System.out.println("Listing successfully added");
             }
-            else if(input == 4){
+            else if(input==4){
+                inv.updateListing();
+            }
+            else if(input == 5){
                 inv.viewLog();
             }
 
-            else if(input == 5) {
+            else if(input == 6) {
                 inv.closeScanner();
                 System.exit(1);
             }
